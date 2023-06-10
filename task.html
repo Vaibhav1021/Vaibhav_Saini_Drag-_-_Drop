@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* CSS styles for responsiveness and layout */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #000000;
+    }
+
+    .container-wrapper {
+      display: flex;
+    }
+
+    .container {
+      flex: 1;
+      max-width: 700px;
+      height: 600px;
+      border: 2px solid #09f58b;
+      padding: 10px;
+      margin-right: 10px;
+      background-color: #fff;
+    }
+
+    .newcontainer {
+      flex: 1;
+      max-width: 700px;
+      height: 600px;
+      border: 2px solid #09f58b;
+      padding: 10px;
+      background-color: #fff;
+    }
+
+    .item {
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+      padding: 5px;
+      height: 130px;
+      width: 180px;
+      margin-bottom: 5px;
+      cursor: move;
+    }
+
+    .item:hover {
+      background-color: #e0e0e0;
+    }
+
+    .success-message {
+      color: green;
+      margin-top: 5px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .reset-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    .reset-button:hover {
+      background-color: #e75115;
+    }
+    .stat {
+      color: #e75115;
+      font-weight: bold;
+      top: 15px;
+      left: 15px;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="stat">
+    <h2>Select the item from BOX 1 and drag it to BOX 2</h2>
+  </div>
+
+  <div class="container-wrapper">
+    <!-- Container 1 -->
+    <div class="container" id="container1">
+      <div class="item" draggable="true">
+        <img src="j7.png" alt="Image 1" height="100px" width="120px">
+      </div>
+
+      <div class="item" draggable="true">
+        <p>A draggable Text Item</p>
+      </div>
+
+      <div class="item" draggable="true">
+        <img src="j6.png" alt="Image 1" height="100px" width="120px">
+      </div>
+    </div>
+
+    <!-- Container 2 -->
+    <div class="newcontainer" id="container2">
+      <div class="success-message"></div>
+    </div>
+  </div>
+
+  <!-- Reset button -->
+  <button class="reset-button" onclick="resetContainers()">Reset</button>
+
+  <script>
+    // Selecting elements
+    const items = document.querySelectorAll('.item'); // Get all items with the class 'item'
+    const container2 = document.getElementById('container2'); // Get the container with the id 'container2'
+    let draggedItem = null; // Variable to store the currently dragged item
+    let successMessage = document.querySelector('.success-message'); // Get the element with the class 'success-message'
+
+    // Add event listeners to enable drag and drop
+    items.forEach((item) => {
+      item.addEventListener('dragstart', dragStart); // Add dragstart event listener to each item
+      item.addEventListener('dragend', dragEnd); // Add dragend event listener to each item
+    });
+
+    container2.addEventListener('dragover', dragOver); // Add dragover event listener to container2
+    container2.addEventListener('dragenter', dragEnter); // Add dragenter event listener to container2
+    container2.addEventListener('dragleave', dragLeave); // Add dragleave event listener to container2
+    container2.addEventListener('drop', drop); // Add drop event listener to container2
+
+    function dragStart() {
+      draggedItem = this; // Set the currently dragged item
+      setTimeout(() => {
+        this.style.display = 'none'; // Hide the item being dragged
+      }, 0);
+    }
+
+    function dragEnd() {
+      setTimeout(() => {
+        draggedItem.style.display = 'block'; // Show the dragged item
+        draggedItem = null; // Reset the dragged item variable
+      }, 0);
+    }
+
+    function dragOver(e) {
+      e.preventDefault(); // Prevent default behavior
+    }
+
+    function dragEnter(e) {
+      e.preventDefault(); // Prevent default behavior
+      this.style.border = '2px dashed red'; // Apply dashed border when an item is being dragged over
+    }
+
+    function dragLeave() {
+      this.style.border = '2px solid red'; // Revert to solid border when an item is dragged out
+    }
+
+    function drop() {
+      this.style.border = '2px solid red'; // Revert to solid border when an item is dropped
+      this.appendChild(draggedItem); // Append the dragged item to the container
+      showSuccessMessage(); // Show success message
+    }
+
+    function showSuccessMessage() {
+      successMessage.textContent = 'Item dropped successfully!'; // Display success message
+    }
+
+    function resetContainers() {
+      container2.innerHTML = '<div class="success-message"></div>'; // Reset container2 by removing its contents
+      successMessage = document.querySelector('.success-message'); // Update successMessage variable
+      items.forEach((item) => {
+        document.getElementById('container1').appendChild(item); // Move all items back to container1
+      });
+    }
+  </script>
+</body>
+</html>
